@@ -1,12 +1,14 @@
 import { NextPage } from 'next';
 import { ShopLayaout } from '@/components/layout';
 import { Products_List } from '@/components/products';
-import { initialData } from '@/database/products';
+import { initialData } from '@/database/seed-data';
 import { Typography } from '@mui/material/';
 import { useProducts } from '@/hook';
 import { FullScreenLoading } from '@/components/ui';
 
 const HomePage: NextPage = () => {
+
+
 	const { products, isLoading } = useProducts('/products');
 	return (
 		<ShopLayaout title={'TesloShop'} pageDescription={'encuentra lo mejores productos'}>

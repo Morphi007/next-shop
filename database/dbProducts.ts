@@ -1,8 +1,6 @@
 import { Product } from '@/models';
 import { db } from './';
 import { IProduct } from '@/interface';
-import { promises } from 'dns';
-import { stringify } from 'querystring';
 
 export const getProductBySlug = async (slug: string): Promise<IProduct | null> => {
 	await db.connect();
@@ -13,6 +11,11 @@ export const getProductBySlug = async (slug: string): Promise<IProduct | null> =
 		return null;
 	}
 
+	TODO: 'un procesamiento de las imagenes cuando subamos al server';
+
+	product.images = product.images.map((image) => {
+		return image.includes('http') ? image : `${process.env.HOST_NAME}products/${image}`;
+	});
 	return JSON.parse(JSON.stringify(product));
 };
 
@@ -37,14 +40,21 @@ export const getProductByTerm = async (term: string): Promise<IProduct[]> => {
 		.lean();
 	await db.disconnect();
 
-	return products;
+	const updatedProducts = products.map((product) => {
+		product.images = product.images.map((image) => {
+			return image.includes('http') ? image : `${process.env.HOST_NAME}products/${image}`;
+		});
+
+		return product;
+	});
+
+	return updatedProducts;
 };
 
-export const getAllProduct=async():Promise<IProduct[]>=>{
+export const getAllProduct = async (): Promise<IProduct[]> => {
+	await db.connect();
+	const products = await Product.find().lean();
+	await db.disconnect();
 
- await db.connect();
-    const products =await Product.find().lean();
- await db.disconnect();
-
- return JSON.parse(JSON.stringify(products));
-}
+	return JSON.parse(JSON.stringify(products));
+};
