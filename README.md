@@ -24,7 +24,6 @@ Renombrar el archivo **.env.templante** a **\_.env.**
 
 ## Llenar la base de datos con informacion de pruebas
 
-LLamara
 `http://localhost:3000/api/seed`
 
 
